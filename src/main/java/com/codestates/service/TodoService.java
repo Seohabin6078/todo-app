@@ -5,6 +5,7 @@ import com.codestates.repository.TodoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TodoService {
@@ -13,21 +14,27 @@ public class TodoService {
     public TodoService(TodoRepository todoRepository) {
         this.todoRepository = todoRepository;
     }
-    // TODO 서비스 계층 구현부터 이어서 해봅세다이이이잉
-    public Todo createTodo() {
-        return new Todo();
+
+    public Todo createTodo(Todo todo) {
+        return todoRepository.save(todo);
     }
 
     public List<Todo> findAllTodos() {
-        return List.of(new Todo());
+        return todoRepository.findAll();
     }
 
-    public Todo findTodo() {
-        return new Todo();
+    public Todo findTodo(long todoId) {
+        Optional<Todo> optionalTodo = todoRepository.findById(todoId);
+        Todo findTodo = optionalTodo.orElseThrow(() -> new RuntimeException());
+        return findTodo;
     }
 
-    public Todo updateTodo() {
-        return new Todo();
+    public Todo updateTodo(Todo todo) {
+        Todo findTodo = findTodo(todo.getTodoId());
+
+        // todo의 기본타입들은 patchDto와 매칭이 되었는지 안되었는지를 어떻게
+        // 구분할 것인가??
+        Optional.ofNullable(todo.getTitle())
     }
 
     public void deleteAllTodos() {
